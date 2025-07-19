@@ -159,10 +159,18 @@ with tab2:
     st.header("Predict from an Excel File")
 
     st.info(
-        "Upload an Excel file (.xlsx) with columns matching the model's required inputs."
-        "\nColumns should be in this order: Inherent Moisture, Ash, Volatile Matter, and Fixed carbon. "
-        "\nThe app will add 'Predicted_Caking' and 'Uncertainty' columns and allow you to download the results."
-    )
+    """
+    Upload an Excel file (.xlsx) with columns matching the model's required inputs.
+    
+    **Required columns (in this order):**
+    - Inherent Moisture
+    - Ash
+    - Volatile Matter
+    - Fixed Carbon
+    
+    The app will process the file and allow you to download a new version containing the prediction and uncertainty columns.
+    """
+)
 
     uploaded_file = st.file_uploader("Choose an Excel file", type="xlsx")
 
