@@ -92,7 +92,7 @@ with tab1:
                 label="Inherent Moisture",
                 min_value=0.0,
                 max_value=100.0,
-                value=50.0,
+                value=0.0,
                 step=0.1,
                 format="%.1f",
             )
@@ -100,7 +100,7 @@ with tab1:
                 label="Ash",
                 min_value=0.0,
                 max_value=100.0,
-                value=25.0,
+                value=0.0,
                 step=0.1,
                 format="%.1f",
             )
@@ -113,7 +113,7 @@ with tab1:
                 label="Volatile Matter",
                 min_value=0.0,
                 max_value=100.0,
-                value=5.0,
+                value=0.0,
                 step=0.1,
                 format="%.1f",
             )
@@ -121,7 +121,7 @@ with tab1:
                 label="Fixed Carbon",
                 min_value=0.0,
                 max_value=100.0,
-                value=1.0,
+                value=0.0,
                 step=0.01,
                 format="%.1f",
             )
