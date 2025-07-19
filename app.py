@@ -1,0 +1,211 @@
+# (Add this new function to the top of your app.py)
+
+import io
+import pandas as pd
+import joblib
+import numpy as np
+import streamlit as st
+
+
+def predict_caking_with_uncertainty(new_data_df, model_path="cakingmodel.joblib"):
+    pipeline = joblib.load(model_path)
+    scaler = pipeline.named_steps["scaler"]
+    rf_model = pipeline.named_steps["rf"]
+
+    new_data_scaled = scaler.transform(new_data_df)
+
+    tree_predictions = [tree.predict(new_data_scaled) for tree in rf_model.estimators_]
+    predictions_array = np.stack(tree_predictions)
+    std_dev = np.std(predictions_array, axis=0)
+    final_prediction = pipeline.predict(new_data_df)
+
+    return final_prediction[0], std_dev[0]
+
+
+def batch_predict_with_uncertainty(df, model_path="cakingmodel.joblib"):
+    """
+    Loads a saved pipeline and makes predictions for an entire DataFrame.
+
+    Parameters:
+    - df (pd.DataFrame): DataFrame with multiple rows of input data.
+    - model_path (str): Path to the saved model file.
+
+    Returns:
+    - tuple: A tuple containing two pandas Series (predictions, uncertainties).
+    """
+    pipeline = joblib.load(model_path)
+
+    # --- Robustly get required model columns ---
+    model_columns = pipeline.named_steps["rf"].feature_names_in_
+
+    # Ensure the dataframe has the required columns
+    # Reorder df columns to match the model's training order
+    df_for_prediction = df[model_columns]
+
+    scaler = pipeline.named_steps["scaler"]
+    rf_model = pipeline.named_steps["rf"]
+
+    # Scale all data at once
+    data_scaled = scaler.transform(df_for_prediction)
+
+    # Get predictions from each tree for all rows at once
+    tree_predictions = [tree.predict(data_scaled) for tree in rf_model.estimators_]
+
+    # Stack predictions and calculate std dev and mean across all trees
+    predictions_array = np.stack(tree_predictions)
+    uncertainties = np.std(predictions_array, axis=0)
+    predictions = np.mean(
+        predictions_array, axis=0
+    )  # This is what pipeline.predict() does
+
+    return pd.Series(predictions), pd.Series(uncertainties)
+
+
+# --- STREAMLIT APP LAYOUT ---
+
+st.set_page_config(
+    page_title="Predict Caking (%) Propensity via Proximate Data",
+    page_icon="🧪",
+    layout="wide",
+)
+
+st.title("Caking Propensity Prediction")
+st.write(
+    "Choose your prediction method: use the input boxes for a single prediction or upload a file for batch predictions."
+)
+
+# --- TABS FOR DIFFERENT MODES ---
+tab1, tab2 = st.tabs(["Single Prediction", "Batch Prediction"])
+
+# --- TAB 1: SINGLE PREDICTION (INPUT BOXES) ---
+with tab1:
+    st.header("Predict from Manual Input")
+
+    with st.form("single_prediction_form"):
+        # Use columns for a cleaner layout
+        col1, col2 = st.columns(2)
+
+        with col1:
+            st.write("#### Input Material Properties")
+            # --- MODIFICATION: Replaced st.slider with st.number_input ---
+            inherent_moisture = st.number_input(
+                label="Inherent Moisture",
+                min_value=0.0,
+                max_value=100.0,
+                value=50.0,
+                step=0.1,
+                format="%.1f",
+            )
+            ash = st.number_input(
+                label="Ash",
+                min_value=0.0,
+                max_value=100.0,
+                value=25.0,
+                step=0.1,
+                format="%.1f",
+            )
+            # ADD MORE INPUT BOXES HERE...
+
+        with col2:
+            st.write("#### Input Material Properties (cont.)")
+            # --- MODIFICATION: Replaced st.slider with st.number_input ---
+            volatile_matter = st.number_input(
+                label="Volatile Matter",
+                min_value=0.0,
+                max_value=100.0,
+                value=5.0,
+                step=0.1,
+                format="%.1f",
+            )
+            fixed_carbon = st.number_input(
+                label="Fixed Carbon",
+                min_value=0.0,
+                max_value=100.0,
+                value=1.0,
+                step=0.01,
+                format="%.1f",
+            )
+            # ADD MORE INPUT BOXES HERE...
+
+        # --- SUBMIT BUTTON FOR THE FORM ---
+        submitted = st.form_submit_button("Predict Caking Propensity")
+
+    if submitted:
+        input_data = {
+            "Inherent Moisture": inherent_moisture,
+            "Ash": ash,
+            "Volatile Matter": volatile_matter,
+            "Fixed Carbon": fixed_carbon,
+            # ADD THE REST OF YOUR FEATURES HERE TO MATCH THE DICTIONARY
+        }
+        input_df = pd.DataFrame([input_data])
+
+        prediction, uncertainty = predict_caking_with_uncertainty(input_df)
+
+        if prediction is not None:
+            st.subheader("Prediction Result")
+            st.metric(
+                label="Predicted Caking Propensity",
+                value=f"{prediction:.1f} %",
+                delta=f"± {uncertainty:.1f} % (Uncertainty)",
+            )
+            # Add a visual gauge/progress bar
+            st.progress(int(prediction))
+
+
+# --- TAB 2: BATCH PREDICTION (FILE UPLOAD) ---
+with tab2:
+    # (This section remains unchanged)
+    st.header("Predict from an Excel File")
+
+    st.info(
+        "Upload an Excel file (.xlsx) with columns matching the model's required inputs. "
+        "Columns should be in this order: Inherent Moisture, Ash, Volatile Matter, and Fixed carbon"
+        "The app will add 'Predicted_Caking' and 'Uncertainty' columns and allow you to download the results."
+    )
+
+    uploaded_file = st.file_uploader("Choose an Excel file", type="xlsx")
+
+    if uploaded_file is not None:
+        input_df_batch = pd.read_excel(uploaded_file)
+        st.write("Uploaded Data Preview:")
+        st.dataframe(input_df_batch.head())
+
+        pipeline_check = joblib.load("..\Training and Validation\cakingmodel.joblib")
+        model_columns = list(pipeline_check.named_steps["rf"].feature_names_in_)
+
+        missing_cols = set(model_columns) - set(input_df_batch.columns)
+        if missing_cols:
+            st.error(
+                f"Error: Your file is missing the following required columns: {list(missing_cols)}"
+            )
+        else:
+            st.success("File columns match model requirements. Ready to predict.")
+
+            if st.button("Run Batch Prediction", type="primary"):
+                with st.spinner("Processing..."):
+                    predictions, uncertainties = batch_predict_with_uncertainty(
+                        input_df_batch
+                    )
+
+                    results_df = input_df_batch.copy()
+                    results_df["Predicted_Caking (%)"] = predictions
+                    results_df["Uncertainty (±%)"] = uncertainties
+
+                    st.write("Prediction Results Preview:")
+                    st.dataframe(results_df.head())
+
+                    output = io.BytesIO()
+                    with pd.ExcelWriter(output, engine="openpyxl") as writer:
+                        results_df.to_excel(
+                            writer, index=False, sheet_name="Predictions"
+                        )
+
+                    processed_data = output.getvalue()
+
+                    st.download_button(
+                        label="📥 Download Results as Excel",
+                        data=processed_data,
+                        file_name="caking_prediction_results.xlsx",
+                        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    )
