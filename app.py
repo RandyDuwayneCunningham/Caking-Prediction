@@ -69,7 +69,7 @@ st.set_page_config(
     layout="wide",
 )
 with st.sidebar:
-    st.image("path/to/your/sasol_logo.png", width=150) # Optional: If you have a logo file
+    
     st.title("About this Tool")
     st.markdown("---")
     st.info(
