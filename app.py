@@ -68,7 +68,14 @@ st.set_page_config(
     page_icon="🧪",
     layout="wide",
 )
-
+with st.sidebar:
+    st.image("path/to/your/sasol_logo.png", width=150) # Optional: If you have a logo file
+    st.title("About this Tool")
+    st.markdown("---")
+    st.info(
+        "This predictive tool was developed and is maintained by the "
+        "**SASOL Research & Technology Feedstock** Team."
+    )
 st.title("Caking Propensity Prediction")
 
 st.warning(
