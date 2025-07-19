@@ -171,7 +171,7 @@ with tab2:
         st.write("Uploaded Data Preview:")
         st.dataframe(input_df_batch.head())
 
-        pipeline_check = joblib.load("..\Training and Validation\cakingmodel.joblib")
+        pipeline_check = joblib.load("cakingmodel.joblib")
         model_columns = list(pipeline_check.named_steps["rf"].feature_names_in_)
 
         missing_cols = set(model_columns) - set(input_df_batch.columns)
