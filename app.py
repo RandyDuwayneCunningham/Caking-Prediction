@@ -70,6 +70,14 @@ st.set_page_config(
 )
 
 st.title("Caking Propensity Prediction")
+
+st.warning(
+    """
+    **Disclaimer:** This is an exploratory tool and was trained on a limited dataset. 
+    The predictions are estimates, not guarantees. Please use the provided uncertainty value 
+    to gauge confidence and always supplement these results with professional judgment.
+    """
+)
 st.write(
     "Choose your prediction method: Single or Multiple Samples."
 )
