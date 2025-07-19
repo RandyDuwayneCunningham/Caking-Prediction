@@ -36,7 +36,7 @@ def batch_predict_with_uncertainty(df, model_path="cakingmodel.joblib"):
     pipeline = joblib.load(model_path)
 
     # --- Robustly get required model columns ---
-    model_columns = pipeline.named_steps["rf"].feature_names_in_
+    model_columns = list(pipeline_check.named_steps['scaler'].get_feature_names_out())
 
     # Ensure the dataframe has the required columns
     # Reorder df columns to match the model's training order
