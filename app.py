@@ -71,7 +71,7 @@ st.set_page_config(
 
 st.title("Caking Propensity Prediction")
 st.write(
-    "Choose your prediction method: use the input boxes for a single prediction or upload a file for batch predictions."
+    "Choose your prediction method: Single or Multiple Samples."
 )
 
 # --- TABS FOR DIFFERENT MODES ---
@@ -86,7 +86,7 @@ with tab1:
         col1, col2 = st.columns(2)
 
         with col1:
-            st.write("#### Input Material Properties")
+            st.write("#### Input Proximate Data")
             # --- MODIFICATION: Replaced st.slider with st.number_input ---
             inherent_moisture = st.number_input(
                 label="Inherent Moisture",
@@ -107,7 +107,7 @@ with tab1:
             # ADD MORE INPUT BOXES HERE...
 
         with col2:
-            st.write("#### Input Material Properties (cont.)")
+            #st.write("#### Input Material Properties (cont.)")
             # --- MODIFICATION: Replaced st.slider with st.number_input ---
             volatile_matter = st.number_input(
                 label="Volatile Matter",
@@ -159,8 +159,8 @@ with tab2:
     st.header("Predict from an Excel File")
 
     st.info(
-        "Upload an Excel file (.xlsx) with columns matching the model's required inputs. "
-        "Columns should be in this order: Inherent Moisture, Ash, Volatile Matter, and Fixed carbon"
+        "Upload an Excel file (.xlsx) with columns matching the model's required inputs. \n"
+        "Columns should be in this order: Inherent Moisture, Ash, Volatile Matter, and Fixed carbon. \n"
         "The app will add 'Predicted_Caking' and 'Uncertainty' columns and allow you to download the results."
     )
 
