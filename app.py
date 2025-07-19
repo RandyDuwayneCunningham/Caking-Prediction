@@ -107,7 +107,7 @@ with tab1:
             # ADD MORE INPUT BOXES HERE...
 
         with col2:
-            #st.write("#### Input Material Properties (cont.)")
+            st.write("#### ")
             # --- MODIFICATION: Replaced st.slider with st.number_input ---
             volatile_matter = st.number_input(
                 label="Volatile Matter",
@@ -159,9 +159,9 @@ with tab2:
     st.header("Predict from an Excel File")
 
     st.info(
-        "Upload an Excel file (.xlsx) with columns matching the model's required inputs. \n"
-        "Columns should be in this order: Inherent Moisture, Ash, Volatile Matter, and Fixed carbon. \n"
-        "The app will add 'Predicted_Caking' and 'Uncertainty' columns and allow you to download the results."
+        "Upload an Excel file (.xlsx) with columns matching the model's required inputs."
+        "\nColumns should be in this order: Inherent Moisture, Ash, Volatile Matter, and Fixed carbon. "
+        "\nThe app will add 'Predicted_Caking' and 'Uncertainty' columns and allow you to download the results."
     )
 
     uploaded_file = st.file_uploader("Choose an Excel file", type="xlsx")
