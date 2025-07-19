@@ -172,7 +172,7 @@ with tab2:
         st.dataframe(input_df_batch.head())
 
         pipeline_check = joblib.load("cakingmodel.joblib")
-        model_columns = list(pipeline_check.named_steps["rf"].feature_names_in_)
+        model_columns = list(pipeline_check.named_steps['scaler'].get_feature_names_out())
 
         missing_cols = set(model_columns) - set(input_df_batch.columns)
         if missing_cols:
