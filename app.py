@@ -68,14 +68,7 @@ st.set_page_config(
     page_icon="🧪",
     layout="wide",
 )
-with st.sidebar:
-    
-    st.title("About this Tool")
-    st.markdown("---")
-    st.info(
-        "This predictive tool was developed and is maintained by the "
-        "**SASOL Research & Technology Feedstock** Team."
-    )
+
 st.title("Caking Propensity Prediction")
 
 st.warning(
@@ -232,3 +225,15 @@ with tab2:
                         file_name="caking_prediction_results.xlsx",
                         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                     )
+
+# --- FOOTER ---
+st.markdown("---")
+st.markdown(
+    """
+    <div style='text-align: center;'>
+        Developed by <strong>SASOL Research & Technology: Feedstock</strong><br>
+        © 2024 SASOL
+    </div>
+    """,
+    unsafe_allow_html=True
+)
