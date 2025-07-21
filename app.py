@@ -162,29 +162,29 @@ with tab1:
                 # ADD THE REST OF YOUR FEATURES HERE TO MATCH THE DICTIONARY
             }
             
-        input_df = pd.DataFrame([input_data])
-        prediction, uncertainty = predict_caking_with_uncertainty(input_df)
-
-        if prediction is not None:
-            st.subheader("Prediction Result")
-            st.metric(
-                label="Predicted Caking Propensity",
-                value=f"{prediction:.1f} %",
-                delta=f"± {uncertainty:.1f} % (Uncertainty)",
-            )
-            # Add a visual gauge/progress bar
-            
-
-            # Get the classification based on the new, simplified logic
-            propensity, color = classify_caking_propensity(prediction, uncertainty)
-            
-            # Display the result in a colored box
-            if color == "success":
-                st.success(f"**Classification: {propensity}**")
-            elif color == "warning":
-                st.warning(f"**Classification: {propensity}**")
-            else: # color == "error"
-                st.error(f"**Classification: {propensity}**")
+            input_df = pd.DataFrame([input_data])
+            prediction, uncertainty = predict_caking_with_uncertainty(input_df)
+    
+            if prediction is not None:
+                st.subheader("Prediction Result")
+                st.metric(
+                    label="Predicted Caking Propensity",
+                    value=f"{prediction:.1f} %",
+                    delta=f"± {uncertainty:.1f} % (Uncertainty)",
+                )
+                # Add a visual gauge/progress bar
+                
+    
+                # Get the classification based on the new, simplified logic
+                propensity, color = classify_caking_propensity(prediction, uncertainty)
+                
+                # Display the result in a colored box
+                if color == "success":
+                    st.success(f"**Classification: {propensity}**")
+                elif color == "warning":
+                    st.warning(f"**Classification: {propensity}**")
+                else: # color == "error"
+                    st.error(f"**Classification: {propensity}**")
 
 
 # --- TAB 2: BATCH PREDICTION (FILE UPLOAD) ---
