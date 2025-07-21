@@ -254,7 +254,7 @@ st.markdown(
     """
     <div style='text-align: center;'>
         Developed by <strong>SASOL Research & Technology: Feedstock</strong><br>
-        © 2024 SASOL
+        © 2025 SASOL
     </div>
     """,
     unsafe_allow_html=True
