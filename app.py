@@ -171,6 +171,7 @@ with tab1:
                     label="Predicted Caking Propensity",
                     value=f"{prediction:.1f} %",
                     delta=f"± {uncertainty:.1f} % (Uncertainty)",
+                    delta_color="off"
                 )
                 # Add a visual gauge/progress bar
                 
