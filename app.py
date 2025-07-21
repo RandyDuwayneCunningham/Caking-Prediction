@@ -75,12 +75,12 @@ def classify_caking_propensity(prediction, uncertainty):
 # --- STREAMLIT APP LAYOUT ---
 
 st.set_page_config(
-    page_title="Predict Caking (%) Propensity via Proximate Data",
+    page_title="Caking (%) Prediction",
     page_icon="🧪",
     layout="wide",
 )
 
-st.title("Caking Propensity Prediction")
+st.title("Caking Propensity Prediction using Proximate Data")
 
 st.warning(
     """
