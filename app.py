@@ -169,7 +169,7 @@ with tab1:
                 delta=f"± {uncertainty:.1f} % (Uncertainty)",
             )
             # Add a visual gauge/progress bar
-            st.progress(int(prediction))
+            
 
             # Get the classification based on the new, simplified logic
             propensity, color = classify_caking_propensity(prediction, uncertainty)
