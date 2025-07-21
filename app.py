@@ -59,7 +59,18 @@ def batch_predict_with_uncertainty(df, model_path="cakingmodel.joblib"):
     )  # This is what pipeline.predict() does
 
     return pd.Series(predictions), pd.Series(uncertainties)
-
+    
+def classify_caking_propensity(prediction, uncertainty):
+    """
+    Classifies caking propensity based on the upper bound of the prediction.
+    """
+    upper_bound = prediction + uncertainty
+    if upper_bound < 25:
+        return "Low Caking Propensity", "success"
+    elif 25 <= upper_bound <= 60:
+        return "Medium Caking Propensity", "warning"
+    else:
+        return "High Caking Propensity", "error"
 
 # --- STREAMLIT APP LAYOUT ---
 
@@ -159,6 +170,17 @@ with tab1:
             )
             # Add a visual gauge/progress bar
             st.progress(int(prediction))
+
+            # Get the classification based on the new, simplified logic
+            propensity, color = classify_caking_propensity(prediction, uncertainty)
+            
+            # Display the result in a colored box
+            if color == "success":
+                st.success(f"**Classification: {propensity}**")
+            elif color == "warning":
+                st.warning(f"**Classification: {propensity}**")
+            else: # color == "error"
+                st.error(f"**Classification: {propensity}**")
 
 
 # --- TAB 2: BATCH PREDICTION (FILE UPLOAD) ---
