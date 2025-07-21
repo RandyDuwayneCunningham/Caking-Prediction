@@ -150,7 +150,7 @@ with tab1:
         submitted = st.form_submit_button("Predict Caking Propensity")
 
     if submitted:
-        all_inputs = [inherent_moisture, ash, volatile _matter, fixed_carbon]
+        all_inputs = [inherent_moisture, ash, volatile_matter, fixed_carbon]
         if any(v is None for v in all_inputs):
             st.error('Please fill in all input fields before making a prediction.')
         else:
