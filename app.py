@@ -65,9 +65,9 @@ def classify_caking_propensity(prediction, uncertainty):
     Classifies caking propensity based on the upper bound of the prediction.
     """
     upper_bound = prediction + uncertainty
-    if upper_bound < 25:
+    if upper_bound <= 30:
         return "Low Caking Propensity", "success"
-    elif 25 <= upper_bound <= 60:
+    elif 30 < upper_bound <= 60:
         return "Medium Caking Propensity", "warning"
     else:
         return "High Caking Propensity", "error"
