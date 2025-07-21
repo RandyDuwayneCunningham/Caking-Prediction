@@ -111,7 +111,7 @@ with tab1:
                 label="Inherent Moisture",
                 min_value=0.0,
                 max_value=100.0,
-                value=0.0,
+                value=None,
                 step=0.1,
                 format="%.1f",
             )
@@ -119,7 +119,7 @@ with tab1:
                 label="Ash",
                 min_value=0.0,
                 max_value=100.0,
-                value=0.0,
+                value=None,
                 step=0.1,
                 format="%.1f",
             )
@@ -132,7 +132,7 @@ with tab1:
                 label="Volatile Matter",
                 min_value=0.0,
                 max_value=100.0,
-                value=0.0,
+                value=None,
                 step=0.1,
                 format="%.1f",
             )
@@ -140,7 +140,7 @@ with tab1:
                 label="Fixed Carbon",
                 min_value=0.0,
                 max_value=100.0,
-                value=0.0,
+                value=None,
                 step=0.01,
                 format="%.1f",
             )
@@ -150,15 +150,19 @@ with tab1:
         submitted = st.form_submit_button("Predict Caking Propensity")
 
     if submitted:
-        input_data = {
-            "Inherent Moisture": inherent_moisture,
-            "Ash": ash,
-            "Volatile Matter": volatile_matter,
-            "Fixed Carbon": fixed_carbon,
-            # ADD THE REST OF YOUR FEATURES HERE TO MATCH THE DICTIONARY
-        }
+        all_inputs = [inherent_moisture, ash, volatile _matter, fixed_carbon]
+        if any(v is None for v in all_inputs):
+            st.error('Please fill in all input fields before making a prediction.')
+        else:
+            input_data = {
+                "Inherent Moisture": inherent_moisture,
+                "Ash": ash,
+                "Volatile Matter": volatile_matter,
+                "Fixed Carbon": fixed_carbon,
+                # ADD THE REST OF YOUR FEATURES HERE TO MATCH THE DICTIONARY
+            }
+            
         input_df = pd.DataFrame([input_data])
-
         prediction, uncertainty = predict_caking_with_uncertainty(input_df)
 
         if prediction is not None:
