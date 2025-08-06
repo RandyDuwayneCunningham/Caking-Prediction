@@ -32,7 +32,7 @@ def check_input_ranges(input_df, ranges):
     warnings = []
     is_in_range = True
     for feature in ranges.keys():
-        min_val, max_val = ranges[feature]
+        np.round(min_val, 2), np.round(max_val, 2) = ranges[feature]
         input_val = input_df[feature].iloc[0]
         if not (min_val <= input_val <= max_val):
             is_in_range = False
@@ -304,6 +304,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
 
 
 
