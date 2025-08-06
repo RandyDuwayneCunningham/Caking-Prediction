@@ -173,6 +173,8 @@ with tab1:
                 format="%.1f",
             )
             # ADD MORE INPUT BOXES HERE...
+        
+        is_in_range, range_warnings = check_input_ranges(input_df, feature_ranges)
 
         # --- SUBMIT BUTTON FOR THE FORM ---
         submitted = st.form_submit_button("Predict Caking Propensity (%)")
@@ -192,7 +194,7 @@ with tab1:
             
             input_df = pd.DataFrame([input_data])
 
-            is_in_range, range_warnings = check_input_ranges(input_df, feature_ranges)
+            
 
             
             prediction, uncertainty = predict_caking_with_uncertainty(input_df)
@@ -296,6 +298,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
 
 
 
