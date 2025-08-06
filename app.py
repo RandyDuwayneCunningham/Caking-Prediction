@@ -4,9 +4,17 @@ import joblib
 import numpy as np
 import streamlit as st
 
+# --- CACHED FUNCTION TO LOAD MODEL ---
+@st.cache_data
+def load_model_bundle(model_path='cakingmodel.joblib'):
+    """Loads the model bundle and caches it for performance."""
+    model_bundle = joblib.load(model_path)
+    return model_bundle
 
+
+# --- HELPER FUNCTIONS ---    
 def predict_caking_with_uncertainty(new_data_df, model_path="cakingmodel.joblib"):
-    pipeline = joblib.load(model_path)
+    pipeline = joblib.load(model_path)['pipeline']
     scaler = pipeline.named_steps["scaler"]
     rf_model = pipeline.named_steps["rf"]
 
@@ -31,7 +39,7 @@ def batch_predict_with_uncertainty(df, model_path="cakingmodel.joblib"):
     Returns:
     - tuple: A tuple containing two pandas Series (predictions, uncertainties).
     """
-    pipeline = joblib.load(model_path)
+    pipeline = joblib.load(model_path)['pipeline']
 
     # --- Robustly get required model columns ---
     model_columns = list(pipeline_check.named_steps['scaler'].get_feature_names_out())
@@ -77,6 +85,10 @@ st.set_page_config(
     page_icon="🧪",
     layout="wide",
 )
+# Load the model bundle once using the cached function
+model_bundle = load_model_bundle()
+pipeline = model_bundle['pipeline']
+feature_ranges = model_bundle['ranges']
 
 st.title("Caking Propensity Prediction using Proximate Data")
 
@@ -90,6 +102,12 @@ st.warning(
 st.write(
     "Choose your prediction method: Single or Multiple Samples"
 )
+
+# Display the recommended ranges clearly and permanently
+range_text = "**Recommended Input Ranges (for a trusted prediction):**\n"
+for feature, (min_val, max_val) in feature_ranges.items():
+    range_text += f"- **{feature}:** `{np.round(min_val, 2)}` to `{np.round(max_val, 2)}`\n"
+st.info(range_text)
 
 # --- TABS FOR DIFFERENT MODES ---
 tab1, tab2 = st.tabs(["Single Prediction", "Batch Prediction"])
@@ -262,4 +280,5 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
 
