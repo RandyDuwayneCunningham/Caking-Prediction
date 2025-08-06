@@ -27,6 +27,18 @@ def predict_caking_with_uncertainty(new_data_df, model_path="cakingmodel.joblib"
 
     return final_prediction[0], std_dev[0]
 
+def check_input_ranges(input_df, ranges):
+    """Checks if inputs are within valid ranges and returns warning messages."""
+    warnings = []
+    is_in_range = True
+    for feature in ranges.keys():
+        min_val, max_val = ranges[feature]
+        input_val = input_df[feature].iloc[0]
+        if not (min_val <= input_val <= max_val):
+            is_in_range = False
+            warnings.append(f"**{feature}:** Input `{input_val}` is outside the recommended range of `{min_val}` to `{max_val}`.")
+    return is_in_range, warnings
+
 
 def batch_predict_with_uncertainty(df, model_path="cakingmodel.joblib"):
     """
@@ -179,6 +191,10 @@ with tab1:
             }
             
             input_df = pd.DataFrame([input_data])
+
+            is_in_range, range_warnings = check_input_ranges(input_df, feature_ranges)
+
+            
             prediction, uncertainty = predict_caking_with_uncertainty(input_df)
     
             if prediction is not None:
@@ -280,5 +296,6 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
 
 
