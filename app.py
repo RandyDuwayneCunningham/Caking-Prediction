@@ -195,7 +195,13 @@ with tab1:
             input_df = pd.DataFrame([input_data])
 
             is_in_range, range_warnings = check_input_ranges(input_df, feature_ranges)
-            st.error(range_warnings)
+            
+            if not is_in_range:
+                warning_markdown = "**The following inputs are outside the recommended ranges:**\n"
+                for message in range_warnings:
+                    warning_markdown += f"- {message}\n"
+                st.error(warning_markdown)
+                st.error("**Therefore, the prediction cannot be trusted.**")
             
             prediction, uncertainty = predict_caking_with_uncertainty(input_df)
     
@@ -298,6 +304,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
 
 
 
