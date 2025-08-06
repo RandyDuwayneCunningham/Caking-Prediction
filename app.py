@@ -36,7 +36,7 @@ def check_input_ranges(input_df, ranges):
         input_val = input_df[feature].iloc[0]
         if not (min_val <= input_val <= max_val):
             is_in_range = False
-            warnings.append(f"**{feature}:** Input `{input_val}` is outside the recommended range of `{min_val}` to `{max_val}`.")
+            warnings.append(f"**{feature}:** Input `{input_val}` is outside the recommended range of `{np.round(min_val, 2)}` to `{np.round(max_val, 2)}`.")
     return is_in_range, warnings
 
 
@@ -304,6 +304,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
 
 
 
