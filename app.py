@@ -1,5 +1,3 @@
-# (Add this new function to the top of your app.py)
-
 import io
 import pandas as pd
 import joblib
@@ -90,7 +88,7 @@ st.warning(
     """
 )
 st.write(
-    "Choose your prediction method: Single or Multiple Samples."
+    "Choose your prediction method: Single or Multiple Samples"
 )
 
 # --- TABS FOR DIFFERENT MODES ---
@@ -108,7 +106,7 @@ with tab1:
             st.write("#### Input Proximate Data")
             # --- MODIFICATION: Replaced st.slider with st.number_input ---
             inherent_moisture = st.number_input(
-                label="Inherent Moisture",
+                label="Inherent Moisture (%)",
                 min_value=0.0,
                 max_value=100.0,
                 value=None,
@@ -116,7 +114,7 @@ with tab1:
                 format="%.1f",
             )
             ash = st.number_input(
-                label="Ash",
+                label="Ash (%)",
                 min_value=0.0,
                 max_value=100.0,
                 value=None,
@@ -129,7 +127,7 @@ with tab1:
             st.write("#### ")
             # --- MODIFICATION: Replaced st.slider with st.number_input ---
             volatile_matter = st.number_input(
-                label="Volatile Matter",
+                label="Volatile Matter (%)",
                 min_value=0.0,
                 max_value=100.0,
                 value=None,
@@ -137,7 +135,7 @@ with tab1:
                 format="%.1f",
             )
             fixed_carbon = st.number_input(
-                label="Fixed Carbon",
+                label="Fixed Carbon (%)",
                 min_value=0.0,
                 max_value=100.0,
                 value=None,
@@ -147,7 +145,7 @@ with tab1:
             # ADD MORE INPUT BOXES HERE...
 
         # --- SUBMIT BUTTON FOR THE FORM ---
-        submitted = st.form_submit_button("Predict Caking Propensity")
+        submitted = st.form_submit_button("Predict Caking Propensity (%)")
 
     if submitted:
         all_inputs = [inherent_moisture, ash, volatile_matter, fixed_carbon]
@@ -264,3 +262,4 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
